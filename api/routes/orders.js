@@ -7,9 +7,7 @@ const Order = require('../models/order');
 const Product = require('../models/product');
 
 router.get('/', (req, res, next)=>{
-    Order.find()
-    .select('product quantity _id')
-    .populate('product', 'name')
+    Order.findAll()
     .then(docs =>{
         res.status(200).json({
             count : docs.length,
@@ -32,7 +30,7 @@ router.get('/', (req, res, next)=>{
     
 })
 router.post('/', checkAuth,(req, res, next)=>{
-    Product.findById(req.body.productId)
+    Product.findByPk(req.body.productId)
     .then(product =>{
         if(!product){
             return res.status(404).json({
@@ -71,8 +69,7 @@ router.post('/', checkAuth,(req, res, next)=>{
 })
 
 router.get('/:orderid', (req, res, next)=>{
-    Order.findById(req.params.orderid)
-    .populate('product', 'quantity product _id')
+    Order.findByPk(req.params.orderid)
     .then(order =>{
         res.status(200).json({
             order: order,
@@ -91,7 +88,7 @@ router.get('/:orderid', (req, res, next)=>{
    
 })
 router.delete('/:orderid', checkAuth,(req, res, next)=>{
-    Order.deleteOne({_id:req.params.orderid})
+    Order.destroy({where:{_id:req.params.orderid}})
     .then(result =>{
         res.status(200).json({
             message: 'Order deleted',

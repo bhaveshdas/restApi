@@ -31,7 +31,7 @@ const upload = multer(
 
 
 router.get('/',(req,res,next)=>{
-    Product.find()
+    Product.findAll()
     .then(docs =>{
         const response = {
             count:docs.length,
